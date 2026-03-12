@@ -15,6 +15,10 @@ function controleurPrincipal($action) {
     $lesActions["updProfil"] = "updateProfil.php";
     $lesActions["addCritiques"] = "addCritiques.php";
     $lesActions["supprimerCritique"] = "deleteComment.php";
+    $lesActions["noter"] = "addNote.php";
+    $lesActions["moderateurCritiques"] = "moderateurC.php";
+    $lesActions["gererCritique"] = "gererCritique.php";
+    $lesActions["moderateurResto"] = "moderateurR.php";
     
 
     if (array_key_exists($action, $lesActions)) {

@@ -17,6 +17,7 @@ function login($mailU, $mdpU)
         if (password_verify($mdpU, $mdpBD)) {
             $_SESSION["mailU"] = $mailU;
             $_SESSION["mdpU"] = $mdpBD;
+            $_SESSION["roleU"] = $util["roleU"];
         }
     }
 }

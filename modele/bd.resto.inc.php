@@ -44,7 +44,7 @@ function getTop4Resto()
 
     try {
         $cnx = connexionPDO();
-$req = $cnx->prepare("SELECT re.*, AVG(cr.note) as noteF
+        $req = $cnx->prepare("SELECT re.*, AVG(cr.note) as noteF
                       FROM resto re, critiquer cr
                       WHERE re.idR = cr.idR
                       GROUP BY re.idR
@@ -52,7 +52,7 @@ $req = $cnx->prepare("SELECT re.*, AVG(cr.note) as noteF
                       LIMIT 4");
         $req->execute();
 
-        $resultat = $req->fetchAll(PDO::FETCH_ASSOC);   
+        $resultat = $req->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
@@ -138,7 +138,7 @@ function getRestosByIdtc($idTC)
     }
 }
 
-//? git all resto by id type cuisine
+//? git all resto by id type cuisine and adresse
 function getRestosByRAvancee($idTC, $voieAdrR, $cpR, $villeR)
 {
 
@@ -162,6 +162,30 @@ function getRestosByRAvancee($idTC, $voieAdrR, $cpR, $villeR)
     } catch (PDOException $e) {
         error_log("DB Error: " . $e->getMessage());
         return [];
+    }
+}
+
+// ? add resto
+function addResto($nomR, $numAdrR, $voieAdrR, $cpR, $villeR, $descR, $horairesR, $latitudeDegR = null, $longitudeDegR = null)
+{
+    try {
+        $cnx = connexionPDO();
+        $stmt = $cnx->prepare("INSERT INTO resto (nomR, numAdrR, voieAdrR, cpR, villeR, descR, horairesR, latitudeDegR, longitudeDegR) 
+                               VALUES (:nomR, :numAdrR, :voieAdrR, :cpR, :villeR, :descR, :horairesR, :latitudeDegR, :longitudeDegR)");
+        $stmt->bindValue(':nomR', $nomR, PDO::PARAM_STR);
+        $stmt->bindValue(':numAdrR', $numAdrR, PDO::PARAM_STR);
+        $stmt->bindValue(':voieAdrR', $voieAdrR, PDO::PARAM_STR);
+        $stmt->bindValue(':cpR', $cpR, PDO::PARAM_STR);
+        $stmt->bindValue(':villeR', $villeR, PDO::PARAM_STR);
+        $stmt->bindValue(':descR', $descR, PDO::PARAM_STR);
+        $stmt->bindValue(':horairesR', $horairesR, PDO::PARAM_STR);
+        $stmt->bindValue(':latitudeDegR', $latitudeDegR);
+        $stmt->bindValue(':longitudeDegR', $longitudeDegR);
+        $stmt->execute();
+
+        return true;
+    } catch (PDOException $e) {
+        return false;
     }
 }
 

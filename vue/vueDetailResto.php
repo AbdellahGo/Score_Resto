@@ -13,26 +13,46 @@ unset($_SESSION['msgAdd'], $_SESSION['msgDelete']);
 <h1><?= $unResto['nomR']; ?>
 
     <?php if ($aimer != false) { ?>
-        <a href="./?action=aimer&idR=<?= $unResto['idR']; ?>"><img class="aimer" src="images/aime.png" alt="j'aime ce restaurant"></a>
+        <a href="./?action=aimer&idR=<?= $unResto['idR']; ?>"><img class="aimer" src="images/aime.png"
+                alt="j'aime ce restaurant"></a>
     <?php } else { ?>
-        <a href="./?action=aimer&idR=<?= $unResto['idR']; ?>"><img class="aimer" src="images/aimepas.png" alt="je n'aime pas encore ce restaurant"></a>
+        <a href="./?action=aimer&idR=<?= $unResto['idR']; ?>"><img class="aimer" src="images/aimepas.png"
+                alt="je n'aime pas encore ce restaurant"></a>
     <?php } ?>
 
 </h1>
 
-<span id="note">
-    <?php for ($i = 1; $i <= 5; $i++) { ?>
-        <a class="aimer" href="./?action=noter&note=<?= $i ?>&idR=<?= $unResto['idR']; ?>">
-            <?php if ($i <= $noteMoy) { ?>
-                <img class="note" src="images/like.png" alt="">
-            <?php } else {
-            ?>
-                <img class="note" src="images/neutre.png" alt="line neutre">
-            <?php } ?>
-        </a>
-    <?php } ?>
-</span>
-<section>
+<div style="display: flex; justify-content: space-between;">
+    <span id="note">
+        <p style="margin: 0; display: inline-block; font-size: 18px; font-weight: bold; padding-right: 5px;">Votre Note:
+        </p>
+        <?php for ($i = 1; $i <= 5; $i++) { ?>
+            <a class="aimer" href="./?action=noter&note=<?= $i ?>&idR=<?= $unResto['idR']; ?>">
+                <?php if ($i <= $noteUser) { ?>
+                    <img class="note" src="images/like.png" alt="">
+                <?php } else {
+                    ?>
+                    <img class="note" src="images/neutre.png" alt="line neutre">
+                <?php } ?>
+            </a>
+        <?php } ?>
+    </span>
+    <span id="note">
+        <p style="margin: 0; display: inline-block; font-size: 18px; font-weight: bold; padding-right: 5px;">Note
+            Global:</p>
+        <?php for ($i = 1; $i <= 5; $i++) { ?>
+            <span class="aimer">
+                <?php if ($i <= $noteMoy) { ?>
+                    <img class="note" src="images/like.png" alt="">
+                <?php } else {
+                    ?>
+                    <img class="note" src="images/neutre.png" alt="line neutre">
+                <?php } ?>
+            </span>
+        <?php } ?>
+    </span>
+</div>
+<section style="margin-top: 18px;">
     Cuisine <br />
     <ul id="tagFood">
         <?php for ($j = 0; $j < count($lesTypesCuisine); $j++) { ?>
@@ -97,7 +117,6 @@ unset($_SESSION['msgAdd'], $_SESSION['msgDelete']);
                 </span>
                 <span><?= $critiques[$i]["commentaire"] ?> </span>
             </div>
-
         </li>
     <?php } ?>
 
@@ -106,14 +125,16 @@ unset($_SESSION['msgAdd'], $_SESSION['msgDelete']);
 <form action="./?action=addCritiques&idR=<?= $unResto['idR']; ?>" method="post">
     <div style="display: flex; flex-direction: column; gap: 8px;">
         <span style="font-weight: bold; color: #888;"><?= $msgAdd ?></span>
-        <label style="font-size: 18px; font-weight: bold;" for="note">
-            Ajouter un note
-        </label>
-        <input style="margin: 0; width: 400px; padding: 5px;" type="number" name="noteU" id="noteU" placeholder="Entrez votre note">
-        <label style="font-size: 18px; font-weight: bold;" for="pseudonyme">
+        <label style="font-size: 18px; font-weight: bold;" for="critiquesU">
             Ajouter un critiques
         </label>
-        <input style="margin: 0;" type="text" name="critiquesU" id="critiquesU" placeholder="Entrez votre Critiques">
+        <textarea name="critiquesU" id="critiquesU" placeholder="Entrez votre Critiques" maxlength="160" rows="4"
+            oninput="document.getElementById('counter').textContent = 160 - this.value.length"
+            style="resize: none; padding: 8px;"></textarea>
+        <div style="color: #888; font-size: 14px;">
+            <span id="counter">160</span>
+            <span>/160</span>
+        </div>
         <input style="margin: 5px 0 0; width: fit-content;" type="submit" value="enregistré">
     </div>
 </form>

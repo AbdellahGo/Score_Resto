@@ -7,22 +7,16 @@ $idR = $_GET["idR"];
 $mailU = getMailULoggedOn();
 $msgAdd = '';
 if ($mailU != "") {
-    if (!empty(trim($_POST['critiquesU'])) && isset($_POST['noteU'])) {
-
+    if (!empty(trim($_POST['critiquesU']))) {
         $critiquesU = trim($_POST['critiquesU']);
-        $noteU = (int) $_POST['noteU'];
-
-        if ($noteU < 1 || $noteU > 5) {
-            $msgAdd = "Veuillez attribuer une note entre 1 et 5.";
+        if (mb_strlen($critiquesU) > 160) {
+            $msgAdd = "Le commentaire ne doit pas dépasser 160 caractères.";
         } else {
-            $req = addCritiquesByUser($idR, $mailU, $noteU, $critiquesU);
+            $req = addOrUpdateCritiquer($idR, $mailU, null, $critiquesU);
             $msgAdd = $req
                 ? "Commentaire ajouté avec succès."
                 : "Erreur lors de l'enregistrement.";
-            error_log(var_export($req, true));
         }
-    } else {
-        $msgAdd = "Veuillez saisir un commentaire et une note.";
     }
 } else {
     $msgAdd = "Vous devez être connecté pour ajouter un commentaire.";

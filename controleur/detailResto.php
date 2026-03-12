@@ -28,6 +28,7 @@ $lesTypesCuisine = getTypesCuisineByIdR($idR);
 $lesPhotos = getPhotosByIdR($idR);
 $noteMoy = round(getNoteMoyenneByIdR($idR), 0);
 $mailU = getMailULoggedOn();
+$noteUser = getNoteByUser($idR, $mailU);
 $aimer = getAimerById($mailU, $idR);
 $critiques = getCritiquerByIdR($idR);
 
