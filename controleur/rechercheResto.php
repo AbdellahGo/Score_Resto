@@ -9,10 +9,8 @@ include_once "$racine/modele/bd.photo.inc.php";
 // creation du menu burger
 $menuBurger = array();
 $menuBurger[] = array("url" => "./?action=recherche&critere=nom", "label" => "Recherche par nom");
-//? not needed START ---------------------
-// $menuBurger[] = array("url" => "./?action=recherche&critere=adresse", "label" => "Recherche par adresse");
-// $menuBurger[] = array("url" => "./?action=recherche&critere=typecuisine", "label" => "Recherche par typecuisine");
-//? not needed END ---------------------
+$menuBurger[] = array("url" => "./?action=recherche&critere=adresse", "label" => "Recherche par adresse");
+$menuBurger[] = array("url" => "./?action=recherche&critere=typecuisine", "label" => "Recherche par typecuisine");
 $menuBurger[] = array("url" => "./?action=recherche&critere=rechercheavancee", "label" => "recherche Avancee");
 
 
@@ -49,12 +47,7 @@ if (isset($_POST["villeR"])) {
     $villeR = trim($_POST["villeR"]);
 }
 
-$idTC = 0;
-if (isset($_POST["idTC"])) {
-    $idTC = (int) $_POST["idTC"];
-}
-
-// appel des fonctions permettant de recuperer les donnees utiles a l'affichage 
+$listIdTC = array_map('intval', $_POST["typesCuisine"] ?? []);
 
 
 switch ($critere) {
@@ -62,35 +55,32 @@ switch ($critere) {
     case 'nom':
         $listeRestos = getRestosByNomR($nomR);
         break;
-    //? not needed START ---------------------
-    // // recherche par adresse
-    // case 'adresse':
-    //     $listeRestos = getRestosByAdresse($voieAdrR, $cpR, $villeR);
-    //     break;
-    // // recherche par typecuisine
-    // case 'typecuisine':
-
-    //     $listeRestos = getRestosByIdtc($idTC);
-    //     if (count($listeRestos) < 1) {
-    //         $msgTC = "Il n'existe aucun restaurant spécialisé dans ce type de cuisine.";
-    //     }
-    //     break;
-    //? not needed END ---------------------
+    // recherche par adresse
+    case 'adresse':
+        $listeRestos = getRestosByAdresse($voieAdrR, $cpR, $villeR);
+        break;
+    // recherche par typecuisine
+    case 'typecuisine':
+        $listeRestos = getRestosByIdtc($listIdTC);
+        if (count($listeRestos) < 1) {
+            $msg = "Il n'existe aucun restaurant spécialisé dans ce type de cuisine.";
+        }
+        break;
     // recherche avancee
     case 'rechercheavancee':
-        $hasAddress = !empty($voieAdrR) || !empty($cpR) || !empty($villeR);
-        $hasIdTC = !empty($idTC) && $idTC > 0;
         $listeRestos = [];
-        if ($hasAddress && $hasIdTC) {
-            $listeRestos = getRestosByRAvancee($idTC, $voieAdrR, $cpR, $villeR);
-        } elseif ($hasAddress && !$hasIdTC) {
-            $listeRestos = getRestosByAdresse($voieAdrR, $cpR, $villeR);
+        $hasAddress = !empty($voieAdrR) || !empty($cpR) || !empty($villeR);
+        $hasIdTC = !empty($listIdTC);
 
-        } elseif (!$hasAddress && $hasIdTC) {
-            $listeRestos = getRestosByIdtc($idTC);
-        }
-        if (count($listeRestos) < 1) {
-            $msg = "Aucun restaurant trouvé.";
+        if (!$hasIdTC) {
+            $msg = "Veuillez sélectionner au moins un type de cuisine.";
+        } elseif (!$hasAddress) {
+            $msg = "Veuillez saisir au moins un champ d'adresse.";
+        } else {
+            $listeRestos = getRestosByRAvancee($listIdTC, $voieAdrR, $cpR, $villeR);
+            if (count($listeRestos) < 1) {
+                $msg = "Aucun restaurant trouvé.";
+            }
         }
         break;
 }

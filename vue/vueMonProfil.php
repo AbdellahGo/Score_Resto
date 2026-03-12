@@ -19,11 +19,4 @@ les types de cuisine que j'aime :
     <?php } ?>
 </ul>
 <hr>
-
-<?php if (($_SESSION['roleU'] ?? 'user') === 'moderateur'): ?>
-    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-        <a href="./?action=moderateurCritiques">Gerer Les Critique</a>
-        <a href="./?action=moderateurResto">Ajouter des restaurant</a>
-    </div>
-<?php endif; ?>
 <a href="./?action=deconnexion">se deconnecter</a>

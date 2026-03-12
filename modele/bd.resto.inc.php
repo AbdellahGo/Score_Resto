@@ -118,19 +118,32 @@ function getRestosAimesByMailU($mailU)
     return $resultat;
 }
 
-//? git all resto by id type cuisine
-function getRestosByIdtc($idTC)
+function buildInPlaceholders($list)
 {
+    $placeholders = [];
+    for ($i = 0; $i < count($list); $i++) {
+        $placeholders[] = ':id' . $i;
+    }
+    return implode(',', $placeholders);
+}
 
+
+//? git all resto by id type cuisine
+function getRestosByIdtc($listIdTC)
+{
+    if (empty($listIdTC)) return [];
     try {
         $cnx = connexionPDO();
-        $req = $cnx->prepare("select re.* 
-                                    from resto re, proposer pr 
-                                    where re.idR = pr.idR 
-                                    and pr.idTC = :idTC");
-        $req->bindValue(':idTC', $idTC, PDO::PARAM_INT);
-        $req->execute();
+        $in = buildInPlaceholders($listIdTC);
+        $req = $cnx->prepare("SELECT re.* 
+                              FROM resto re
+                              INNER JOIN proposer pr ON re.idR = pr.idR 
+                              WHERE pr.idTC IN ($in)");
 
+        for ($i = 0; $i < count($listIdTC); $i++) {
+            $req->bindValue(':id' . $i, $listIdTC[$i], PDO::PARAM_INT);
+        }
+        $req->execute();
         return $req->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
         error_log("DB Error: " . $e->getMessage());
@@ -139,25 +152,26 @@ function getRestosByIdtc($idTC)
 }
 
 //? git all resto by id type cuisine and adresse
-function getRestosByRAvancee($idTC, $voieAdrR, $cpR, $villeR)
+function getRestosByRAvancee($listIdTC, $voieAdrR, $cpR, $villeR)
 {
-
+    if (empty($listIdTC)) return [];
     try {
         $cnx = connexionPDO();
-        $req = $cnx->prepare("select re.* 
-                                    from resto re, proposer pr 
-                                    where re.idR = pr.idR 
-                                    and pr.idTC = :idTC
-                                    AND LOWER(re.voieAdrR) LIKE LOWER(:voieAdrR)
-                                    AND LOWER(re.cpR) LIKE LOWER(:cpR)
-                                    AND LOWER(re.villeR) LIKE LOWER(:villeR)");
-
-        $req->bindValue(':idTC', $idTC, PDO::PARAM_INT);
+        $in = buildInPlaceholders($listIdTC);
+        $req = $cnx->prepare("SELECT re.* 
+                              FROM resto re
+                              INNER JOIN proposer pr ON re.idR = pr.idR 
+                              WHERE pr.idTC IN ($in)
+                              AND LOWER(re.voieAdrR) LIKE LOWER(:voieAdrR)
+                              AND LOWER(re.cpR) LIKE LOWER(:cpR)
+                              AND LOWER(re.villeR) LIKE LOWER(:villeR)");
+        for ($i = 0; $i < count($listIdTC); $i++) {
+            $req->bindValue(':id' . $i, $listIdTC[$i], PDO::PARAM_INT);
+        }
         $req->bindValue(':voieAdrR', "%" . $voieAdrR . "%", PDO::PARAM_STR);
         $req->bindValue(':cpR', $cpR . "%", PDO::PARAM_STR);
         $req->bindValue(':villeR', "%" . $villeR . "%", PDO::PARAM_STR);
         $req->execute();
-
         return $req->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
         error_log("DB Error: " . $e->getMessage());

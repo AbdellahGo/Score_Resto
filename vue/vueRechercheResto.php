@@ -10,47 +10,46 @@
             <input type="text" name="nomR" placeholder="nom" value="<?php echo $nomR ?>" /><br />
             <?php
             break;
-            //? not needed START ---------------------
-            // case "adresse":
-            //     ?>
-            // Recherche par adresse : <br />
-            // <input type="text" name="villeR" placeholder="ville" value="<?php echo $villeR ?>" /><br />
-            // <input type="text" name="cpR" placeholder="code postal" value="<?php echo $cpR ?>" /><br />
-            // <input type="text" name="voieAdrR" placeholder="rue" value="<?php echo $voieAdrR ?>" /><br />
-            // <?php
-            //     break;
-            // case "typecuisine":
-            //     ?>
-            // Recherche par typecuisine : <br />
-            // <select name="idTC" id="idTC">
-                // <?php foreach ($listTypesCuisine as $tc): ?>
-                    // <option value="<?php echo $tc['idTC'] ?>"><?php echo $tc['libelleTC'] ?></option>
-                    // <?php endforeach; ?>
-                // </select>
-            // <?php
-        //     break;
-        //? not needed END ---------------------
-        case "rechercheavancee":
+        case "adresse":
             ?>
             Recherche par adresse : <br />
+            <input type="text" name="villeR" placeholder="ville" value="<?php echo $villeR ?>" /><br />
+            <input type="text" name="cpR" placeholder="code postal" value="<?php echo $cpR ?>" /><br />
+            <input type="text" name="voieAdrR" placeholder="rue" value="<?php echo $voieAdrR ?>" /><br />
+            <?php
+            break;
+        case "typecuisine":
+            ?>
+            Recherche par typecuisine : <br />
+            <div>
+                <?php foreach ($listTypesCuisine as $tc): ?>
+                    <input type="checkbox" name="typesCuisine[]" value="<?= $tc['idTC'] ?>" id="tc_<?= $tc['idTC'] ?>">
+                    <label for="<?= $tc['idTC'] ?>"><?= $tc['libelleTC'] ?></label>
+                <?php endforeach; ?>
+            </div>
+            <?php
+            break;
+        case "rechercheavancee":
+            ?>
+            Recherche par adresse et typecuisine : <br />
             <input type="text" name="villeR" placeholder="ville" value="<?php echo $villeR ?>" />
             <br />
             <input type="text" name="cpR" placeholder="code postal" value="<?php echo $cpR ?>" />
             <br />
             <input type="text" name="voieAdrR" placeholder="rue" value="<?php echo $voieAdrR ?>" />
             <br />
-            Recherche par typecuisine : <br />
-            <select name="idTC" id="idTC">
-                <option value="0">-- Sélectionnez un type de cuisine --</option>
+            <br />
+            <div>
                 <?php foreach ($listTypesCuisine as $tc): ?>
-                    <option value="<?php echo $tc['idTC'] ?>"><?php echo $tc['libelleTC'] ?></option>
+                    <input type="checkbox" name="typesCuisine[]" value="<?= $tc['idTC'] ?>" id="tc_<?= $tc['idTC'] ?>">
+                    <label for="tc_<?= $tc['idTC'] ?>"><?= $tc['libelleTC'] ?></label>
                 <?php endforeach; ?>
-            </select>
+            </div>
             <?php
             break;
     }
     ?>
-    <br /><br />
+    <br />
     <input type="submit" value="Rechercher" />
 
 </form>
