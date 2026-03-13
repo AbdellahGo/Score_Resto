@@ -2,7 +2,8 @@
 
 include_once "bd.inc.php";
 
-function getPhotosByIdR($idR) {
+function getPhotosByIdR($idR)
+{
     $resultat = array();
 
     try {
@@ -14,8 +15,9 @@ function getPhotosByIdR($idR) {
 
         $resultat = $req->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
-        print "Erreur !: " . $e->getMessage();
-        die();
+        error_log("DB Error: " . $e->getMessage());
+        return $resultat;
+
     }
     return $resultat;
 }

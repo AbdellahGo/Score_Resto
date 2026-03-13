@@ -16,7 +16,7 @@ $menuBurger[] = array("url" => "./?action=recherche&critere=rechercheavancee", "
 
 
 $msg = '';
-
+$listeRestos = [];
 // list type cuisine
 $listTypesCuisine = getTypesCuisine();
 
@@ -61,10 +61,10 @@ switch ($critere) {
         break;
     // recherche par typecuisine
     case 'typecuisine':
-        $listeRestos = getRestosByIdtc($listIdTC);
-        if (count($listeRestos) < 1) {
-            $msg = "Il n'existe aucun restaurant spécialisé dans ce type de cuisine.";
-        }
+            $listeRestos = getRestosByIdtc($listIdTC);
+            if (count($listeRestos) < 1) {
+                $msg = "Il n'existe aucun restaurant spécialisé dans ce type de cuisine.";
+            }
         break;
     // recherche avancee
     case 'rechercheavancee':
@@ -94,7 +94,7 @@ switch ($critere) {
 $titre = "Recherche d'un restaurant";
 include "$racine/vue/entete.html.php";
 include "$racine/vue/vueRechercheResto.php";
-if (!empty($_POST)) {
+if (!empty($_POST) ) {
     // affichage des resultats de la recherche
     include "$racine/vue/vueResultRecherche.php";
 }

@@ -28,6 +28,14 @@
     <?php endforeach; ?>
 
     <hr>
+    <h3>Types Cuisine</h3>
+    <div>
+        <?php foreach ($listTypesCuisine as $tc): ?>
+            <input type="checkbox" name="typesCuisine[]" value="<?= $tc['idTC'] ?>" id="tc_<?= $tc['idTC'] ?>">
+            <label for="tc_<?= $tc['idTC'] ?>"><?= $tc['libelleTC'] ?></label>
+        <?php endforeach; ?>
+    </div>
+    <hr>
     <h3>Horaires</h3>
 
     <?php

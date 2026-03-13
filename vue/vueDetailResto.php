@@ -115,7 +115,7 @@ unset($_SESSION['msgAdd'], $_SESSION['msgDelete']);
                     }
                     ?>
                 </span>
-                <span><?= $critiques[$i]["commentaire"] ?> </span>
+                <span><?= htmlspecialchars($critiques[$i]["commentaire"]) ?> </span>
             </div>
         </li>
     <?php } ?>

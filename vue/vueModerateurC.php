@@ -12,7 +12,7 @@
             <p><strong>Restaurant:</strong> <?= $critique['nomR'] ?></p>
             <p><strong>Utilisateur:</strong> <?= $critique['pseudoU'] ?></p>
             <p><strong>Note:</strong> <?= $critique['note'] ?? 'Aucune note' ?></p>
-            <p><strong>Commentaire:</strong> <?= $critique['commentaire'] ?? 'Aucun commentaire' ?></p>
+            <p><strong>Commentaire:</strong> <?= htmlspecialchars($critique['commentaire']) ?? 'Aucun commentaire' ?></p>
 
             <form action="./?action=gererCritique" method="post">
                 <input type="hidden" name="idR" value="<?= $critique['idR'] ?>">

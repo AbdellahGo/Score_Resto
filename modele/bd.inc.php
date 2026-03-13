@@ -1,18 +1,19 @@
 <?php
 
-function connexionPDO() {
+function connexionPDO()
+{
     $login = "root";
     $mdp = "";
     $bd = "bd_resto_view";
     $serveur = "localhost";
 
     try {
-        $conn = new PDO("mysql:host=$serveur;dbname=$bd;charset=UTF8", $login, $mdp); 
+        $conn = new PDO("mysql:host=$serveur;dbname=$bd;charset=UTF8", $login, $mdp);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         return $conn;
     } catch (PDOException $e) {
-        print "Erreur de connexion PDO ";
-        die();
+        error_log("DB Error: " . $e->getMessage());
+        return false;
     }
 }
 

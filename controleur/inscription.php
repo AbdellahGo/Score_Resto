@@ -10,30 +10,29 @@ $menuBurger[] = array("url" => "./?action=inscription", "label" => "Inscription"
 $inscrit = false;
 $msg = "";
 // recuperation des donnees GET, POST, et SESSION
-if (isset($_POST["mailU"]) && isset($_POST["mdpU"]) && isset($_POST["pseudoU"])) {
-
-    if ($_POST["mailU"] != "" &&  $_POST["mdpU"] != "" && $_POST["pseudoU"] != "") {
-        if (!filter_var($_POST["mailU"], FILTER_VALIDATE_EMAIL)) {
-            $msg = "S'il vous plaît, mettez une adresse email valide. exemple@gamil.com";
-        } elseif (getUtilisateurByMailU($_POST["mailU"])) {
-            $msg = "Cet e-mail existe déjà.";
-        } else {
-            $mailU = $_POST["mailU"];
-            $mdpU = $_POST["mdpU"];
-            $pseudoU = $_POST["pseudoU"];
-
-            // enregistrement des donnees
-            $ret = addUtilisateur($mailU, $mdpU, $pseudoU);
-            if ($ret) {
-                $inscrit = true;
-            } else {
-                $msg = "l'utilisateur n'a pas été enregistré.";
-            }
-        }
+if (!empty($_POST["mailU"]) && !empty($_POST["mdpU"]) && !empty($_POST["pseudoU"])) {
+    $mailU = trim($_POST["mailU"]);
+    $mdpU = trim($_POST["mdpU"]);
+    $pseudoU = trim($_POST["pseudoU"]);
+    if (!filter_var($mailU, FILTER_VALIDATE_EMAIL)) {
+        $msg = "S'il vous plaît, mettez une adresse email valide. exemple@gamil.com";
+    } elseif (getUtilisateurByMailU($mailU)) {
+        $msg = "Cet e-mail existe déjà.";
+    } elseif (!preg_match("/^[a-zA-Z]+$/", $pseudoU)) {
+        $msg = "Le pseudo ne doit contenir que des lettres.";
     } else {
-        $msg = "Renseigner tous les champs...";
+        // enregistrement des donnees
+        $ret = addUtilisateur($mailU, $mdpU, $pseudoU);
+        if ($ret) {
+            $inscrit = true;
+        } else {
+            $msg = "l'utilisateur n'a pas été enregistré.";
+        }
     }
+} else {
+    $msg = "Renseigner tous les champs...";
 }
+
 
 if ($inscrit) {
     // appel du script de vue qui permet de gerer l'affichage des donnees

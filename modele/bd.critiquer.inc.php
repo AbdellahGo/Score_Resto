@@ -17,8 +17,8 @@ function getCritiquerByIdR($idR)
 
         $resultat = $req->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
-        print "Erreur !: " . $e->getMessage();
-        die();
+        error_log("DB Error: " . $e->getMessage());
+        return $resultat;
     }
     return $resultat;
 }
@@ -36,8 +36,8 @@ function getNoteMoyenneByIdR($idR)
 
         $resultat = $req->fetch(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
-        print "Erreur !: " . $e->getMessage();
-        die();
+        error_log("DB Error: " . $e->getMessage());
+        return 0;
     }
     if ($req->rowCount() > 0) {
         return $resultat["moyenne"];
@@ -71,7 +71,8 @@ function addOrUpdateCritiquer($idR, $mailU, $note = null, $critique = null)
 }
 
 // ? select all comment whit status = en_attente
-function getCritiquesEnAttente(){
+function getCritiquesEnAttente()
+{
     try {
         $cnx = connexionPDO();
         $stmt = $cnx->prepare('SELECT cr.*, u.pseudoU, r.nomR
@@ -82,6 +83,7 @@ function getCritiquesEnAttente(){
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
+        error_log("DB Error: " . $e->getMessage());
         return [];
     }
 }
@@ -99,6 +101,7 @@ function approveCritique($idR, $mailU)
         $stmt->execute();
         return true;
     } catch (PDOException $e) {
+        error_log("DB Error: " . $e->getMessage());
         return false;
     }
 }
@@ -116,6 +119,7 @@ function rejectCritique($idR, $mailU)
         $stmt->execute();
         return true;
     } catch (PDOException $e) {
+        error_log("DB Error: " . $e->getMessage());
         return false;
     }
 }
@@ -136,9 +140,10 @@ function getNoteByUser($idR, $mailU)
         if ($resultat && isset($resultat["note"])) {
             return $resultat["note"];
         }
-        return '0';
+        return 0;
     } catch (PDOException $e) {
-        return '0';
+        error_log("DB Error: " . $e->getMessage());
+        return 0;
     }
 }
 
@@ -155,6 +160,7 @@ function deleteCritiquesByUser($idR, $mailU)
 
         return true;
     } catch (PDOException $e) {
+        error_log("DB Error: " . $e->getMessage());
         return false;
     }
 }

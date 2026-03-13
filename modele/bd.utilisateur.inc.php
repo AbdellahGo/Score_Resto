@@ -12,13 +12,14 @@ function getUtilisateurs()
 
         $resultat = $req->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
-        print "Erreur !: " . $e->getMessage();
-        die();
+        error_log("DB Error: " . $e->getMessage());
+        return $resultat;
     }
     return $resultat;
 }
 //? change pseudo
-function updatePseudoByMailU($mailU, $newPseudo) {
+function updatePseudoByMailU($mailU, $newPseudo)
+{
     try {
         $cnx = connexionPDO();
 
@@ -36,13 +37,14 @@ function updatePseudoByMailU($mailU, $newPseudo) {
         return $req->rowCount();
 
     } catch (PDOException $e) {
-        print "Erreur !: " . $e->getMessage();
-        die();
+        error_log("DB Error: " . $e->getMessage());
+        return false;
     }
 }
 
 //? change password
-function updateMdp($mailU, $newMdp) {
+function updateMdp($mailU, $newMdp)
+{
     try {
         $cnx = connexionPDO();
         $mdpUCrypt = password_hash($newMdp, PASSWORD_DEFAULT);
@@ -60,8 +62,8 @@ function updateMdp($mailU, $newMdp) {
         return $req->rowCount();
 
     } catch (PDOException $e) {
-        print "Erreur !: " . $e->getMessage();
-        die();
+        error_log("DB Error: " . $e->getMessage());
+        return false;
     }
 }
 
@@ -77,13 +79,15 @@ function getUtilisateurByMailU($mailU)
 
         $resultat = $req->fetch(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
-        print "Erreur !: " . $e->getMessage();
-        die();
+        error_log("DB Error: " . $e->getMessage());
+        return $resultat;
     }
     return $resultat;
 }
 
-function addUtilisateur($mailU, $mdpU, $pseudoU) {
+function addUtilisateur($mailU, $mdpU, $pseudoU)
+{
+    $resultat = [];
     try {
         $cnx = connexionPDO();
 
@@ -96,8 +100,8 @@ function addUtilisateur($mailU, $mdpU, $pseudoU) {
 
         $resultat = $req->execute();
     } catch (PDOException $e) {
-        print "Erreur !: " . $e->getMessage();
-        die();
+        error_log("DB Error: " . $e->getMessage());
+        return $resultat;
     }
     return $resultat;
 }

@@ -13,8 +13,8 @@ function getTypesCuisine()
 
         $resultat = $req->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
-        print "Erreur !: " . $e->getMessage();
-        die();
+        error_log("DB Error: " . $e->getMessage());
+        return $resultat;
     }
     return $resultat;
 }
@@ -31,8 +31,8 @@ function getTypesCuisinePreferesByMailU($mailU)
 
         $resultat = $req->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
-        print "Erreur !: " . $e->getMessage();
-        die();
+        error_log("DB Error: " . $e->getMessage());
+        return $resultat;
     }
     return $resultat;
 }
@@ -47,10 +47,10 @@ function getTypesCuisineNonPreferesByMailU($mailU)
         $req->bindValue(':mailU', $mailU, PDO::PARAM_STR);
         $req->execute();
 
-        $ligne = $req->fetchAll(PDO::FETCH_ASSOC);
+        $resultat = $req->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
-        print "Erreur !: " . $e->getMessage();
-        die();
+        error_log("DB Error: " . $e->getMessage());
+        return $resultat;
     }
     return $resultat;
 }
@@ -67,8 +67,8 @@ function getTypesCuisineByIdR($idR)
 
         $resultat = $req->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
-        print "Erreur !: " . $e->getMessage();
-        die();
+        error_log("DB Error: " . $e->getMessage());
+        return $resultat;
     }
     return $resultat;
 }
@@ -90,7 +90,7 @@ function updateTypeCuisinePrefere($mailU, $selectedTypes)
         foreach ($existing as $idTCExist) {
             if (!in_array($idTCExist, $selectedTypes)) {
                 $deleteStmt->bindValue(':mailU', $mailU, PDO::PARAM_STR);
-                $deleteStmt->bindValue(':idTC', (int)$idTCExist, PDO::PARAM_INT);
+                $deleteStmt->bindValue(':idTC', (int) $idTCExist, PDO::PARAM_INT);
                 $deleteStmt->execute();
             }
         }
@@ -98,16 +98,17 @@ function updateTypeCuisinePrefere($mailU, $selectedTypes)
         foreach ($selectedTypes as $idTC) {
             if (!in_array($idTC, $existing)) {
                 $insertStmt->bindValue(':mailU', $mailU, PDO::PARAM_STR);
-                $insertStmt->bindValue(':idTC', (int)$idTC, PDO::PARAM_INT);
+                $insertStmt->bindValue(':idTC', (int) $idTC, PDO::PARAM_INT);
                 $insertStmt->execute();
             }
         }
 
-        return true;
     } catch (PDOException $e) {
-        print "Erreur !: " . $e->getMessage();
-        die();
+        error_log("DB Error: " . $e->getMessage());
+        return false;
     }
+    return true;
+
 }
 
 if ($_SERVER["SCRIPT_FILENAME"] == __FILE__) {

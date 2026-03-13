@@ -4,7 +4,7 @@ include_once "bd.inc.php";
 
 function getRestoByIdR($idR)
 {
-
+    $resultat = [];
     try {
         $cnx = connexionPDO();
         $req = $cnx->prepare("select * from resto where idR=:idR");
@@ -14,8 +14,9 @@ function getRestoByIdR($idR)
 
         $resultat = $req->fetch(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
-        print "Erreur !: " . $e->getMessage();
-        die();
+        error_log("DB Error: " . $e->getMessage());
+        return $resultat;
+
     }
     return $resultat;
 }
@@ -32,8 +33,8 @@ function getRestos()
 
         $resultat = $req->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
-        print "Erreur !: " . $e->getMessage();
-        die();
+        error_log("DB Error: " . $e->getMessage());
+        return $resultat;
     }
     return $resultat;
 }
@@ -54,8 +55,8 @@ function getTop4Resto()
 
         $resultat = $req->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
-        print "Erreur !: " . $e->getMessage();
-        die();
+        error_log("DB Error: " . $e->getMessage());
+        return $resultat;
     }
     return $resultat;
 }
@@ -73,8 +74,8 @@ function getRestosByNomR($nomR)
 
         $resultat = $req->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
-        print "Erreur !: " . $e->getMessage();
-        die();
+        error_log("DB Error: " . $e->getMessage());
+        return $resultat;
     }
     return $resultat;
 }
@@ -91,11 +92,10 @@ function getRestosByAdresse($voieAdrR, $cpR, $villeR)
         $req->bindValue(':villeR', "%" . $villeR . "%", PDO::PARAM_STR);
         $req->execute();
 
-        // $resultat = $req->fetchAll(PDO::FETCH_ASSOC);
-        return $req->fetchAll(PDO::FETCH_ASSOC);
+        $resultat = $req->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
-        print "Erreur !: " . $e->getMessage();
-        die();
+        error_log("DB Error: " . $e->getMessage());
+        return $resultat;
     }
     return $resultat;
 }
@@ -112,8 +112,8 @@ function getRestosAimesByMailU($mailU)
 
         $resultat = $req->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
-        print "Erreur !: " . $e->getMessage();
-        die();
+        error_log("DB Error: " . $e->getMessage());
+        return $resultat;
     }
     return $resultat;
 }
@@ -131,7 +131,8 @@ function buildInPlaceholders($list)
 //? git all resto by id type cuisine
 function getRestosByIdtc($listIdTC)
 {
-    if (empty($listIdTC)) return [];
+    if (empty($listIdTC))
+        return [];
     try {
         $cnx = connexionPDO();
         $in = buildInPlaceholders($listIdTC);
@@ -154,7 +155,8 @@ function getRestosByIdtc($listIdTC)
 //? git all resto by id type cuisine and adresse
 function getRestosByRAvancee($listIdTC, $voieAdrR, $cpR, $villeR)
 {
-    if (empty($listIdTC)) return [];
+    if (empty($listIdTC))
+        return [];
     try {
         $cnx = connexionPDO();
         $in = buildInPlaceholders($listIdTC);
@@ -197,6 +199,23 @@ function addResto($nomR, $numAdrR, $voieAdrR, $cpR, $villeR, $descR, $horairesR,
         $stmt->bindValue(':longitudeDegR', $longitudeDegR);
         $stmt->execute();
 
+        return $cnx->lastInsertId();
+    } catch (PDOException $e) {
+        return false;
+    }
+}
+//? Associe un restaurant à plusieurs types de cuisine dans la table proposer.
+function addProposer($idR, $listIdTC)
+{
+    try {
+        $cnx = connexionPDO();
+        $stmt = $cnx->prepare("INSERT INTO proposer (idR, idTC) VALUES (:idR, :idTC)");
+        
+        foreach ($listIdTC as $idTC) {
+            $stmt->bindValue(':idR', $idR, PDO::PARAM_INT);
+            $stmt->bindValue(':idTC', $idTC, PDO::PARAM_INT);
+            $stmt->execute();
+        }
         return true;
     } catch (PDOException $e) {
         return false;
