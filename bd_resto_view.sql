@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 02, 2026 at 05:41 PM
+-- Generation Time: Mar 12, 2026 at 12:42 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -11,10 +11,8 @@ SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
 
-
 CREATE DATABASE IF NOT EXISTS bd_resto_view;
 USE bd_resto_view;
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -25,9 +23,11 @@ USE bd_resto_view;
 --
 
 -- --------------------------------------------------------
+
 --
 -- Table structure for table `aimer`
 --
+
 CREATE TABLE `aimer` (
   `idR` bigint(20) NOT NULL,
   `mailU` varchar(150) NOT NULL
@@ -38,22 +38,33 @@ CREATE TABLE `aimer` (
 --
 
 INSERT INTO `aimer` (`idR`, `mailU`) VALUES
+(1, 'ab@gmail.com'),
 (1, 'achille@tallon.fr'),
 (1, 'bugs.bunny@gmail.com'),
+(1, 'gogo2@gmail.com'),
 (1, 'michel.garay@gmail.com'),
 (1, 'test@bts.sio'),
+(2, 'ab@gmail.com'),
 (2, 'bugs.bunny@gmail.com'),
+(2, 'gogo2@gmail.com'),
+(2, 'zozo@gmail.com'),
+(3, 'ab@gmail.com'),
 (3, 'bugs.bunny@gmail.com'),
+(4, 'ab@gmail.com'),
 (4, 'bugs.bunny@gmail.com'),
 (4, 'test@bts.sio'),
 (5, 'test@bts.sio'),
 (6, 'test@bts.sio'),
 (7, 'bugs.bunny@gmail.com'),
 (7, 'test@bts.sio'),
+(8, 'ab@gmail.com'),
 (8, 'achille@tallon.fr'),
 (8, 'bugs.bunny@gmail.com'),
 (8, 'test@bts.sio'),
+(8, 'zozo@gmail.com'),
+(9, 'gogo2@gmail.com'),
 (10, 'gaston.lagaffe@gmail.com'),
+(10, 'gogo2@gmail.com'),
 (11, 'john.doe@gmail.com');
 
 -- --------------------------------------------------------
@@ -66,32 +77,35 @@ CREATE TABLE `critiquer` (
   `idR` bigint(20) NOT NULL,
   `mailU` varchar(150) NOT NULL,
   `note` int(11) DEFAULT NULL,
-  `commentaire` varchar(4096) DEFAULT NULL
+  `commentaire` varchar(4096) DEFAULT NULL,
+  `statut` varchar(20) DEFAULT 'en_attente'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `critiquer`
 --
 
-INSERT INTO `critiquer` (`idR`, `mailU`, `note`, `commentaire`) VALUES
-(1, 'achille@tallon.fr', 5, NULL),
-(1, 'bugs.bunny@gmail.com', 3, 'Très bonne entrecote, les frites sont maisons et delicieuses.'),
-(1, 'jj.soueix@gmail.com', 3, 'moyen'),
-(1, 'john.doe@gmail.com', 4, 'Très bon accueil.'),
-(1, 'test@bts.sio', 4, '5/5 parce que j\'aime les entrecotes'),
-(2, 'bugs.bunny@gmail.com', 1, 'À éviter...'),
-(2, 'jj.soueix@gmail.com', 2, 'bof.'),
-(2, 'john.doe@gmail.com', 1, 'Cuisine tres moyenne.'),
-(4, 'bugs.bunny@gmail.com', 5, NULL),
-(4, 'john.doe@gmail.com', 5, 'Rapide.'),
-(5, 'john.doe@gmail.com', 3, 'Cuisine correcte.'),
-(6, 'john.doe@gmail.com', 4, 'Cuisine de qualité.'),
-(7, 'bugs.bunny@gmail.com', NULL, NULL),
-(7, 'gaston.lagaffe@gmail.com', 4, 'Bon accueil.'),
-(7, 'john.doe@gmail.com', 5, 'Excellent.'),
-(8, 'achille@tallon.fr', 4, NULL),
-(8, 'test@bts.sio', 1, NULL),
-(9, 'bugs.bunny@gmail.com', 4, 'Très bon accueil :)');
+INSERT INTO `critiquer` (`idR`, `mailU`, `note`, `commentaire`, `statut`) VALUES
+(1, 'bugs.bunny@gmail.com', 3, 'Très bonne entrecote, les frites sont maisons et delicieuses.', 'approuve'),
+(1, 'jj.soueix@gmail.com', 3, 'moyen', 'approuve'),
+(1, 'john.doe@gmail.com', 4, 'Très bon accueil.', 'approuve'),
+(1, 'test@bts.sio', 4, '5/5 parce que j\'aime les entrecotes', 'approuve'),
+(2, 'bugs.bunny@gmail.com', 1, 'À éviter...', 'approuve'),
+(2, 'jj.soueix@gmail.com', 2, 'bof.', 'approuve'),
+(2, 'john.doe@gmail.com', 1, 'Cuisine tres moyenne.', 'approuve'),
+(4, 'a@gmail.com', 1, 'good', 'approuve'),
+(4, 'bugs.bunny@gmail.com', 5, NULL, 'rejete'),
+(4, 'john.doe@gmail.com', 5, 'Rapide.', 'en_attente'),
+(5, 'john.doe@gmail.com', 3, 'Cuisine correcte.', 'en_attente'),
+(6, 'john.doe@gmail.com', 4, 'Cuisine de qualité.', 'en_attente'),
+(7, 'a@gmail.com', 5, 'iudjkhdskjn', 'en_attente'),
+(7, 'bugs.bunny@gmail.com', NULL, NULL, 'en_attente'),
+(7, 'gaston.lagaffe@gmail.com', 4, 'Bon accueil.', 'en_attente'),
+(7, 'john.doe@gmail.com', 5, 'Excellent.', 'en_attente'),
+(7, 'test@bts.sio', 3, 'go', 'approuve'),
+(8, 'achille@tallon.fr', 4, NULL, 'en_attente'),
+(8, 'test@bts.sio', 1, NULL, 'en_attente'),
+(9, 'bugs.bunny@gmail.com', 4, 'Très bon accueil :)', 'en_attente');
 
 -- --------------------------------------------------------
 
@@ -141,6 +155,8 @@ CREATE TABLE `preferer` (
 --
 
 INSERT INTO `preferer` (`mailU`, `idTC`) VALUES
+('ab@gmail.com', 1),
+('ab@gmail.com', 2),
 ('achille@tallon.fr', 1),
 ('achille@tallon.fr', 7),
 ('achille@tallon.fr', 9),
@@ -162,7 +178,11 @@ INSERT INTO `preferer` (`mailU`, `idTC`) VALUES
 ('test@bts.sio', 2),
 ('test@bts.sio', 3),
 ('test@bts.sio', 10),
-('test@bts.sio', 11);
+('test@bts.sio', 11),
+('zozo@gmail.com', 1),
+('zozo@gmail.com', 2),
+('zozo@gmail.com', 4),
+('zozo@gmail.com', 5);
 
 -- --------------------------------------------------------
 
@@ -268,23 +288,30 @@ INSERT INTO `typecuisine` (`idTC`, `libelleTC`) VALUES
 CREATE TABLE `utilisateur` (
   `mailU` varchar(150) NOT NULL,
   `mdpU` varchar(70) DEFAULT NULL,
-  `pseudoU` varchar(50) DEFAULT NULL
+  `pseudoU` varchar(50) DEFAULT NULL,
+  `roleU` varchar(20) DEFAULT 'user'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `utilisateur`
 --
 
-INSERT INTO `utilisateur` (`mailU`, `mdpU`, `pseudoU`) VALUES
-('abd22@gmail.com', '$2y$10$rF5.DEIxi628afmUbgmJqeXmST4bfsqY.EF7565N4A4', 'DODO'),
-('abf@gmail.com', '$2y$10$xlnnHTuNyxP4bDi.3TKShOzQ.dMtx0uGl/QJrmqmuiheAXJmwMrle', 'DODO'),
-('achille@tallon.fr', 'sej6dETYl/ea.', 'yann'),
-('bugs.bunny@gmail.com', 'seSzpoUAQgIl.', 'pich'),
-('gaston.lagaffe@gmail.com', '$1$zvN5hYSQSQDFUIQSdufUQSDFznHF5osT.', '@lex'),
-('jj.soueix@gmail.com', '$1$zvN5hYMI$SDFGSDFGJqJSDJF.', 'drskott'),
-('john.doe@gmail.com', '$1$zvNDSFQSdfqsDfQsdfsT.', 'Nico40'),
-('michel.garay@gmail.com', '$1$zvN5hYMI$VSatLQ6SDFGdsfgznHF5osT.', 'Mitch'),
-('test@bts.sio', 'seSzpoUAQgIl.', 'testeur SIO');
+INSERT INTO `utilisateur` (`mailU`, `mdpU`, `pseudoU`, `roleU`) VALUES
+('a@gmail.com', '$2y$10$funUVjil8nInsaLHADWMdubdn6.8/rBCT/DYGmFqJHZqGgjy31IDG', 'DODO', 'user'),
+('ab@gmail.com', '$2y$10$lcJyADd4sK/C45apwuAZ8O6rF9cNjO3kBIAT9MiPmH8Ayhvjb.8oC', 'AZA', 'user'),
+('abd22@gmail.com', '$2y$10$rF5.DEIxi628afmUbgmJqeXmST4bfsqY.EF7565N4A4', 'DODO', 'user'),
+('abf@gmail.com', '$2y$10$xlnnHTuNyxP4bDi.3TKShOzQ.dMtx0uGl/QJrmqmuiheAXJmwMrle', 'DODO', 'user'),
+('achille@tallon.fr', 'sej6dETYl/ea.', 'yann', 'user'),
+('bugs.bunny@gmail.com', 'seSzpoUAQgIl.', 'pich', 'user'),
+('gaston.lagaffe@gmail.com', '$1$zvN5hYSQSQDFUIQSdufUQSDFznHF5osT.', '@lex', 'user'),
+('gogo1@gmail.com', '$2y$10$V.S8rB.unu8Ns05baxxC2Oz3thmQa01eheDgwjdeJv0EtG/RCQ6nq', 'S', 'user'),
+('gogo2@gmail.com', '$2y$10$3cjKJ0.73X.HQ/no5typruGrGonPk9B.rd3sY5iK91mYAB0PQcNvq', '123123', 'user'),
+('gogo@gmail.com', '$2y$10$0Y53WBEYHIYgJdJhgX.CZuRqyhDov58wBjkLEN.LhrnzZmPKVycmm', 'DODOK', 'user'),
+('jj.soueix@gmail.com', '$1$zvN5hYMI$SDFGSDFGJqJSDJF.', 'drskott', 'user'),
+('john.doe@gmail.com', '$1$zvNDSFQSdfqsDfQsdfsT.', 'Nico40', 'user'),
+('michel.garay@gmail.com', '$1$zvN5hYMI$VSatLQ6SDFGdsfgznHF5osT.', 'Mitch', 'user'),
+('test@bts.sio', 'seSzpoUAQgIl.', 'DODO', 'moderateur'),
+('zozo@gmail.com', '$2y$10$fqQwY3nFy8qWTqaVR3Pj7OKPh6Q21lVtkFytW7/bSUnMRVOphKaKe', 'DODO', 'user');
 
 --
 -- Indexes for dumped tables
