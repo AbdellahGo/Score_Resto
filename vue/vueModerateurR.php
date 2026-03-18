@@ -4,7 +4,7 @@
     <span style="color: green;"><?= $msg ?></span>
 <?php endif; ?>
 
-<form action="./?action=moderateurResto" method="post">
+<form action="./?action=moderateurResto" method="post" enctype="multipart/form-data">
     <?php
     $fields = [
         'nomR' => ['label' => 'Nom du restaurant', 'type' => 'text'],
@@ -35,6 +35,12 @@
             <label for="tc_<?= $tc['idTC'] ?>"><?= $tc['libelleTC'] ?></label>
         <?php endforeach; ?>
     </div>
+
+    <hr>
+    <h3>Photos</h3>
+    <input type="file" name="photos[]" accept="image/*" multiple>
+    <br>
+
     <hr>
     <h3>Horaires</h3>
 
@@ -47,11 +53,15 @@
         'emporter_semaine' => 'À emporter - Semaine',
         'emporter_weekend' => 'À emporter - Week-end',
     ];
-
     foreach ($horaires as $key => $label): ?>
         <label><?= $label ?></label>
-        <input type="text" name="horaires[<?= $key ?>]" placeholder="ex: de 11h45 à 14h30" required><br>
+        <input type="time" name="horaires[<?= $key ?>][debut]" requiredd>
+        à
+        <input type="time" name="horaires[<?= $key ?>][fin]" required>
+        <br>
     <?php endforeach; ?>
+
+
 
     <input type="submit" value="Ajouter le restaurant">
 </form>

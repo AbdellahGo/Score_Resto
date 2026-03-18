@@ -201,6 +201,8 @@ function addResto($nomR, $numAdrR, $voieAdrR, $cpR, $villeR, $descR, $horairesR,
 
         return $cnx->lastInsertId();
     } catch (PDOException $e) {
+        //  die("DB Error: " . $e->getMessage());
+        error_log("DB Error: " . $e->getMessage());
         return false;
     }
 }
@@ -218,6 +220,24 @@ function addProposer($idR, $listIdTC)
         }
         return true;
     } catch (PDOException $e) {
+        //  die("DB Error: " . $e->getMessage());
+        error_log("DB Error: " . $e->getMessage());
+        return false;
+    }
+}
+
+function addPhoto($cheminP, $idR)
+{
+    try {
+        $cnx = connexionPDO();
+        $stmt = $cnx->prepare("INSERT INTO photo (cheminP, idR) VALUES (:cheminP, :idR)");
+        $stmt->bindValue(':cheminP', $cheminP, PDO::PARAM_STR);
+        $stmt->bindValue(':idR', $idR, PDO::PARAM_INT);
+        $stmt->execute();
+        return true;
+    } catch (PDOException $e) {
+        //  die("DB Error: " . $e->getMessage());
+        error_log("DB Error: " . $e->getMessage());
         return false;
     }
 }

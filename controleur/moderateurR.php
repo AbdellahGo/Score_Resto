@@ -2,7 +2,7 @@
 include_once "$racine/modele/authentification.inc.php";
 include_once "$racine/modele/bd.resto.inc.php";
 include_once "$racine/modele/bd.typeCuisine.inc.php";
-
+include_once "$racine/modele/bd.photo.inc.php";
 $mailU = getMailULoggedOn();
 $listTypesCuisine = getTypesCuisine();
 $roleU = $_SESSION['roleU'] ?? 'user';
@@ -13,8 +13,6 @@ if ($roleU !== 'moderateur') {
 }
 
 $msg = '';
-$listTypesCuisine = getTypesCuisine();
-
 if ($mailU !== '') {
     if (
         !empty($_POST["nomR"]) &&
@@ -39,7 +37,6 @@ if ($mailU !== '') {
         $listIdTC = array_map('intval', $_POST["typesCuisine"]);
 
         $h = $_POST["horaires"];
-
         $rows = [
             'Midi' => ['midi_semaine', 'midi_weekend'],
             'Soir' => ['soir_semaine', 'soir_weekend'],
@@ -48,11 +45,15 @@ if ($mailU !== '') {
 
         $tbody = '';
         foreach ($rows as $label => $keys) {
+            $debut1 = $h[$keys[0]]['debut'];
+            $fin1 = $h[$keys[0]]['fin'];
+            $debut2 = $h[$keys[1]]['debut'];
+            $fin2 = $h[$keys[1]]['fin'];
             $tbody .= "
                 <tr>
                     <td class='label'>{$label}</td>
-                    <td class='cell'>{$h[$keys[0]]}</td>
-                    <td class='cell'>{$h[$keys[1]]}</td>
+                    <td class='cell'>de {$debut1} à {$fin1}</td>
+                    <td class='cell'>de {$debut2} à {$fin2}</td>
                 </tr>";
         }
 
@@ -65,19 +66,39 @@ if ($mailU !== '') {
                     <th>Week-end</th>
                 </tr>
             </thead>
-            <tbody>
-                {$tbody}
-            </tbody>
+            <tbody>{$tbody}</tbody>
         </table>";
 
         $newIdR = addResto($nomR, $numAdrR, $voieAdrR, $cpR, $villeR, $descR, $horairesR, $latitudeDegR, $longitudeDegR);
         if ($newIdR) {
-            $req = addProposer($newIdR, $listIdTC);
-            $msg = $req ? "Restaurant ajouté avec succès." : "Erreur lors de l'ajout des types de cuisine.";
+            // add types cuisine
+            addProposer($newIdR, $listIdTC);
+
+            // handle photos upload
+            if (!empty($_FILES["photos"]["name"][0])) {
+                $uploadDir = dirname(__DIR__) . "/photos/";
+                ;
+                foreach ($_FILES["photos"]["tmp_name"] as $key => $tmpName) {
+                    if ($_FILES["photos"]["error"][$key] === 0) {
+                        $extension = pathinfo($_FILES["photos"]["name"][$key], PATHINFO_EXTENSION);
+                        $filename = uniqid('resto_') . '.' . $extension;
+
+                        $moved = move_uploaded_file($tmpName, $uploadDir . $filename);
+
+                        if ($moved) {
+                            addPhoto($filename, $newIdR);
+                        } else {
+                            $msg = "Erreur lors de l'upload de la photo.";
+                        }
+                    }
+                }
+            }
+
+            $msg = "Restaurant ajouté avec succès.";
         } else {
             $msg = "Erreur lors de l'ajout du restaurant.";
         }
-    } else {
+    } elseif (!empty($_POST)) {
         $msg = "Veuillez remplir tous les champs.";
     }
 }
