@@ -1,14 +1,25 @@
-<h1>Critiques en attente</h1>
-
-<?php if (!empty($msg)): ?>
-    <span><?= $msg ?></span>
-<?php endif; ?>
-
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+$msg = $_SESSION['msg'] ?? '';
+$commentEffected = $_SESSION['commentEffected'] ?? '';
+// Clear it so it doesn't show again on refresh
+unset($_SESSION['msg'], $_SESSION['commentEffected']);
+?>
 <?php if (empty($critiquesEnAttente)): ?>
     <p>Aucune critique en attente.</p>
 <?php else: ?>
     <?php foreach ($critiquesEnAttente as $critique): ?>
         <div style="border: 1px solid #ccc; padding: 16px; margin: 10px 0;">
+            <?php if (
+                !empty($commentEffected['idR']) && !empty($commentEffected['mailU'])
+                && $commentEffected['idR'] == $critique['idR']
+                && $commentEffected['mailU'] == $critique['mailU']
+            ): ?>
+                <span style="font-weight: bold; color: #888;"><?= $msg ?></span>
+            <?php endif; ?>
+
             <p><strong>Restaurant:</strong> <?= $critique['nomR'] ?></p>
             <p><strong>Utilisateur:</strong> <?= $critique['pseudoU'] ?></p>
             <p><strong>Note:</strong> <?= $critique['note'] ?? 'Aucune note' ?></p>

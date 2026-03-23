@@ -99,29 +99,52 @@ unset($_SESSION['msgAdd'], $_SESSION['msgDelete']);
 
 <ul id="critiques">
     <span style="font-weight: bold; color: #888;"><?= $msgDelete ?></span>
-    <?php for ($i = 0; $i < count($critiques); $i++) { ?>
+
+    <?php for ($i = 0; $i < count($critiques); $i++) {
+
+        $isPending = $critiques[$i]['statut'] === 'en_attente';
+        $isRejected = $critiques[$i]['statut'] === 'rejete';
+        $isCommentOwner = $critiques[$i]['mailU'] === $mailU;
+
+        // ? Skip if comment is pending and not owner comment
+        if (($isPending || $isRejected) && !$isCommentOwner) {
+            continue;
+        }
+        ?>
         <li>
             <span>
                 <?= $critiques[$i]["mailU"] ?>
-                <?php if ($critiques[$i]["mailU"] == $mailU) { ?>
+
+                <?php if ($isCommentOwner) { ?>
                     <a href='./?action=supprimerCritique&idR=<?= $unResto['idR']; ?>'>Supprimer</a>
                 <?php } ?>
             </span>
+
             <div>
                 <span>
-                    <?php
-                    if ($critiques[$i]["note"]) {
+                    <?php if ($critiques[$i]["note"]) {
                         echo $critiques[$i]["note"] . "/5";
-                    }
-                    ?>
+                    } ?>
                 </span>
-                <span><?= htmlspecialchars($critiques[$i]["commentaire"]) ?> </span>
+
+                <?php if ($isPending && $isCommentOwner): ?>
+                    <span style="color: red;">
+                        Votre commentaire ("<?= htmlspecialchars($critiques[$i]["commentaire"]) ?>") est en attente de validation par le modérateur.
+                    </span>
+                <?php elseif ($isRejected && $isCommentOwner): ?>
+                    <span style="color: red;">
+                        Votre commentaire ("<?= htmlspecialchars($critiques[$i]["commentaire"]) ?>") a été rejeté par le modérateur.
+                    </span>
+                <?php else: ?>
+                    <span><?= htmlspecialchars($critiques[$i]["commentaire"]) ?></span>
+                <?php endif; ?>
+
             </div>
         </li>
+
     <?php } ?>
 
 </ul>
-
 <form action="./?action=addCritiques&idR=<?= $unResto['idR']; ?>" method="post">
     <div style="display: flex; flex-direction: column; gap: 8px;">
         <span style="font-weight: bold; color: #888;"><?= $msgAdd ?></span>

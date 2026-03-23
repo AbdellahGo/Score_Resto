@@ -20,7 +20,8 @@ $menuBurger[] = Array("url"=>"#crit","label"=>"Critiques");
 
 // recuperation des donnees GET, POST, et SESSION
 $idR = $_GET["idR"];
-
+// git mail user
+$mailU = getMailULoggedOn();
 // appel des fonctions permettant de recuperer les donnees utiles a l'affichage 
 $unResto = getRestoByIdR($idR);
 

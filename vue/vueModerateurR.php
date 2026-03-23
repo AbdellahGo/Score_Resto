@@ -13,8 +13,8 @@
         'cpR' => ['label' => 'Code postal', 'type' => 'text'],
         'villeR' => ['label' => 'Ville', 'type' => 'text'],
         'descR' => ['label' => 'Description', 'type' => 'textarea'],
-        'latitudeDegR' => ['label' => 'Latitude', 'type' => 'text'],
-        'longitudeDegR' => ['label' => 'Longitude', 'type' => 'text'],
+        'latitudeDegR' => ['label' => 'Latitude', 'type' => 'number'],
+        'longitudeDegR' => ['label' => 'Longitude', 'type' => 'number'],
     ];
 
     foreach ($fields as $name => $field): ?>

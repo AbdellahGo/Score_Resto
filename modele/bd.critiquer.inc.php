@@ -10,7 +10,8 @@ function getCritiquerByIdR($idR)
         $cnx = connexionPDO();
         $req = $cnx->prepare("SELECT * FROM critiquer 
                       WHERE idR = :idR 
-                      AND statut = 'approuve'");
+                    --   AND statut = 'approuve'
+                      ");
         $req->bindValue(':idR', $idR, PDO::PARAM_INT);
 
         $req->execute();
@@ -29,7 +30,8 @@ function getNoteMoyenneByIdR($idR)
 
     try {
         $cnx = connexionPDO();
-        $req = $cnx->prepare("SELECT avg(note) as moyenne FROM critiquer WHERE idR = :idR AND statut = 'approuve'");
+        $req = $cnx->prepare("SELECT avg(note) as moyenne FROM critiquer WHERE idR = :idR ");
+
         $req->bindValue(':idR', $idR, PDO::PARAM_INT);
 
         $req->execute();
@@ -129,10 +131,10 @@ function getNoteByUser($idR, $mailU)
 {
     try {
         $cnx = connexionPDO();
-        $selectStmt = $cnx->prepare('SELECT note FROM critiquer 
-                              WHERE idR = :idR 
-                              AND mailU = :mailU
-                              AND statut = "approuve"');
+        $selectStmt = $cnx->prepare('SELECT note 
+                                FROM critiquer 
+                                WHERE idR = :idR 
+                                AND mailU = :mailU');
         $selectStmt->bindValue(':idR', $idR, PDO::PARAM_INT);
         $selectStmt->bindValue(':mailU', $mailU, PDO::PARAM_STR);
         $selectStmt->execute();

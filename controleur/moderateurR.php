@@ -26,12 +26,13 @@ if ($mailU !== '') {
         !empty($_POST["horaires"]) &&
         !empty($_POST["typesCuisine"])
     ) {
-        $nomR = trim($_POST["nomR"]);
-        $numAdrR = trim($_POST["numAdrR"]);
-        $voieAdrR = trim($_POST["voieAdrR"]);
-        $cpR = trim($_POST["cpR"]);
-        $villeR = trim($_POST["villeR"]);
-        $descR = trim($_POST["descR"]);
+ 
+        $nomR = isset($_POST["nomR"]) ? htmlspecialchars(trim($_POST["nomR"]), ENT_QUOTES, 'UTF-8') : '';
+        $numAdrR = isset($_POST["numAdrR"]) ? htmlspecialchars(trim($_POST["numAdrR"]), ENT_QUOTES, 'UTF-8') : '';
+        $voieAdrR = isset($_POST["voieAdrR"]) ? htmlspecialchars(trim($_POST["voieAdrR"]), ENT_QUOTES, 'UTF-8') : '';
+        $cpR = isset($_POST["cpR"]) ? htmlspecialchars(trim($_POST["cpR"]), ENT_QUOTES, 'UTF-8') : '';
+        $villeR = isset($_POST["villeR"]) ? htmlspecialchars(trim($_POST["villeR"]), ENT_QUOTES, 'UTF-8') : '';
+        $descR = isset($_POST["descR"]) ? htmlspecialchars(trim($_POST["descR"]), ENT_QUOTES, 'UTF-8') : '';
         $latitudeDegR = (float) $_POST["latitudeDegR"];
         $longitudeDegR = (float) $_POST["longitudeDegR"];
         $listIdTC = array_map('intval', $_POST["typesCuisine"]);
