@@ -22,7 +22,6 @@ unset($_SESSION['msg'], $_SESSION['commentEffected']);
 
             <p><strong>Restaurant:</strong> <?= $critique['nomR'] ?></p>
             <p><strong>Utilisateur:</strong> <?= $critique['pseudoU'] ?></p>
-            <p><strong>Note:</strong> <?= $critique['note'] ?? 'Aucune note' ?></p>
             <p><strong>Commentaire:</strong> <?= htmlspecialchars($critique['commentaire']) ?? 'Aucun commentaire' ?></p>
 
             <form action="./?action=gererCritique" method="post">
